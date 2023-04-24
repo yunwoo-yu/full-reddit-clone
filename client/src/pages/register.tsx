@@ -1,7 +1,7 @@
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import InputGroup from '../components/InputGroup';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { useRouter } from 'next/router';
 
 function Register() {
