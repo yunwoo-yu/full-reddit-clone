@@ -22,7 +22,7 @@ function InputGroup({
       <input
         type={type}
         value={value}
-        style={{ minHeight: 300 }}
+        style={{ minWidth: 300 }}
         className={cls(
           `w-full p-3 transition duration-200 border border-gray-400 rounded bg-gray-50 focus:bg-white hover:bg-white`,
           {
