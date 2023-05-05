@@ -29,6 +29,7 @@ const register = async (req: Request, res: Response) => {
     }
 
     const user = new User();
+
     user.email = email;
     user.username = username;
     user.password = password;
