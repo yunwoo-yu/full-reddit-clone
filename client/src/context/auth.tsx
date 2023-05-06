@@ -1,0 +1,64 @@
+import { ReactNode, createContext, useContext, useReducer } from 'react';
+import { User } from '../types/types';
+
+interface State {
+  authenticated: boolean;
+  user: User | null;
+  loading: boolean;
+}
+
+interface Action {
+  type: string;
+  payload: any;
+}
+
+const initialData = { authenticated: false, user: null, loading: true };
+
+const AuthContext = createContext<State>({ ...initialData });
+
+const DispatchContext = createContext<any>(null);
+
+const reducer = (state: State, { type, payload }: Action) => {
+  switch (type) {
+    case 'LOGIN':
+      return {
+        ...state,
+        authenticated: true,
+        user: payload,
+      };
+    case 'LOGOUT':
+      return {
+        ...state,
+        authenticated: false,
+        user: null,
+      };
+    case 'STOP_LOADING':
+      return {
+        ...state,
+        loading: false,
+      };
+    default:
+      throw new Error(`Unknown action type: ${type}`);
+  }
+};
+
+const AuthContextProvider = ({ children }: { children: ReactNode }) => {
+  const [state, defaultdispatch] = useReducer(reducer, { ...initialData });
+
+  const dispatch = (type: string, payload?: any) => {
+    defaultdispatch({ type, payload });
+  };
+
+  console.log('state', state);
+
+  return (
+    <DispatchContext.Provider value={dispatch}>
+      <AuthContext.Provider value={state}>{children}</AuthContext.Provider>
+    </DispatchContext.Provider>
+  );
+};
+
+export const useAuthState = () => useContext(AuthContext);
+export const useAuthDispatch = () => useContext(DispatchContext);
+
+export default AuthContextProvider;
