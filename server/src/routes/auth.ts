@@ -1,6 +1,9 @@
 import { Request, Response, Router } from 'express';
 import { User } from '../entities/User';
-import { validate } from 'class-validator';
+import { isEmpty, validate } from 'class-validator';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import cookie from 'cookie';
 
 const mapError = (errors: Object[]) => {
   return errors.reduce((acc: any, cur: any) => {
@@ -49,8 +52,60 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
+interface LoginErrors {
+  username: string;
+  password: string;
+}
+
+const login = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  try {
+    const errors: Partial<LoginErrors> = {};
+    // 비워져 있으면 에러를 클라이언트로 전송
+    if (isEmpty(username)) errors.username = '사용자 이름을 작성해 주세요.';
+    if (isEmpty(password)) errors.password = '비밀번호를 작성해 주세요.';
+
+    // 에러가 있다면 400 에러와 함께 에러를 전달
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json(errors);
+    }
+
+    // DB에 유저 찾기
+    const user = await User.findOneBy({ username });
+
+    if (!user) return res.status(404).json({ username: '사용자 이름이 등록되지 않았습니다.' });
+
+    // 유저가 있으면 비밀번호 비교
+
+    const passowrdMatches = await bcrypt.compare(password, user.password);
+
+    // 비밀번호가 다르면 에러 보내기
+    if (!passowrdMatches) {
+      return res.status(401).json({ passowrd: '비밀번호가 잘못되었습니다.' });
+    }
+
+    // 비밀번호가 맞으면 토큰 생성
+    const token = jwt.sign({ username }, process.env.JWT_SECRET);
+
+    res.set(
+      'Set-Cookie',
+      cookie.serialize('token', token, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/',
+      })
+    );
+
+    return res.json({ user, token });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json(err);
+  }
+};
+
 const authRouter = Router();
 
 authRouter.post('/register', register);
+authRouter.post('/login', login);
 
 export default authRouter;
