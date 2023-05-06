@@ -27,7 +27,7 @@ function Register() {
       });
 
       console.log(res);
-      // router.push('/login');
+      router.push('/login');
     } catch (err: any) {
       console.log(err);
       setErrors(err.response.data || {});
@@ -53,7 +53,7 @@ function Register() {
               error={errors.username}
             />
             <InputGroup
-              placeholder="Email"
+              placeholder="Password"
               value={password}
               setValue={setPassword}
               error={errors.password}
