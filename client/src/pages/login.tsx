@@ -40,31 +40,31 @@ function Login() {
   };
 
   return (
-    <div className="bg-white">
-      <div className="flex flex-col items-center justify-center h-screen p-6">
-        <div className="w-10/12 mx-auto md:w-96">
-          <h1 className="mb-2 text-lg font-medium">로그인</h1>
+    <div className='bg-white'>
+      <div className='flex h-screen flex-col items-center justify-center p-6'>
+        <div className='mx-auto w-10/12 md:w-96'>
+          <h1 className='mb-2 text-lg font-medium'>로그인</h1>
           <form onSubmit={onSubmitHandler}>
             <InputGroup
-              placeholder="Username"
+              placeholder='Username'
               value={username}
               setValue={setUsername}
               error={errors.username}
             />
             <InputGroup
-              placeholder="Password"
+              placeholder='Password'
               value={password}
               setValue={setPassword}
               error={errors.password}
             />
 
-            <button className="w-full py-2 mb-1 text-xs font-bold text-white uppercase bg-gray-400 border border-gray-400 rounded">
+            <button className='mb-1 w-full rounded border border-gray-400 bg-gray-400 py-2 text-xs font-bold uppercase text-white'>
               로그인
             </button>
           </form>
           <small>
             아직 아이디가 없나요?
-            <Link href="/register" className="ml-1 text-blue-500 uppercase">
+            <Link href='/register' className='ml-1 uppercase text-blue-500'>
               회원가입
             </Link>
           </small>
