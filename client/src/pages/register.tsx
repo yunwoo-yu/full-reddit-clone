@@ -3,18 +3,23 @@ import Link from 'next/link';
 import InputGroup from '../components/InputGroup';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useAuthState } from '../context/auth';
 
 function Register() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  const { authenticated } = useAuthState();
   const [errors, setErrors] = useState({
     email: '',
     username: '',
     password: '',
   });
+
+  console.log(authenticated);
+
+  if (authenticated) router.push('/');
 
   const onSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
