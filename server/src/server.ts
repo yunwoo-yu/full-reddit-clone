@@ -1,12 +1,14 @@
-import express from 'express';
-import morgan from 'morgan';
-import { AppDataSource } from './data-source';
-import authRouter from './routes/auth';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express from "express";
+import morgan from "morgan";
+import { AppDataSource } from "./data-source";
+import authRoutes from "./routes/auth";
+import cors from "cors";
+import dotenv from "dotenv";
+import subRoutes from "./routes/subs";
+import cookieParser from "cookie-parser";
 
 const app = express();
-const origin = 'http://localhost:3000';
+const origin = "http://localhost:3000";
 
 app.use(
   cors({
@@ -16,10 +18,12 @@ app.use(
 );
 
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
+app.use(cookieParser());
 
-app.get('/', (_, res) => res.send('running'));
-app.use('/api/auth', authRouter);
+app.get("/", (_, res) => res.send("running"));
+app.use("/api/auth", authRoutes);
+app.use("/api/subs", subRoutes);
 
 dotenv.config();
 
@@ -30,7 +34,7 @@ app.listen(port, async () => {
 
   AppDataSource.initialize()
     .then(() => {
-      console.log('database initialized');
+      console.log("database initialized");
     })
     .catch((error) => console.log(error));
 });

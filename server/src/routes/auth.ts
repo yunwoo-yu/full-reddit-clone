@@ -1,15 +1,21 @@
-import { Request, Response, Router } from 'express';
-import { User } from '../entities/User';
-import { isEmpty, validate } from 'class-validator';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
+import { Request, Response, Router } from "express";
+import { User } from "../entities/User";
+import { isEmpty, validate } from "class-validator";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import cookie from "cookie";
+import userMiddleware from "../middlewares/user";
+import authMiddleware from "../middlewares/auth";
 
 const mapError = (errors: Object[]) => {
   return errors.reduce((acc: any, cur: any) => {
     acc[cur.property] = Object.entries(cur.constraints)[0][1];
     return acc;
   }, {});
+};
+
+const me = async (_: Request, res: Response) => {
+  return res.json(res.locals.user);
 };
 
 const register = async (req: Request, res: Response) => {
@@ -23,8 +29,8 @@ const register = async (req: Request, res: Response) => {
 
     // 이미 있을 경우 errors 객체에 넣어줌
 
-    if (emailUser) errors.email = '이미 해당 이메일 주소가 사용되었습니다.';
-    if (usernameUser) errors.username = '이미 이 사용자 이름이 사용되었습니다.';
+    if (emailUser) errors.email = "이미 해당 이메일 주소가 사용되었습니다.";
+    if (usernameUser) errors.username = "이미 이 사용자 이름이 사용되었습니다.";
 
     // 에러가 있을경우 retrun 으로 에러를 response로 보내줌.
     if (Object.keys(errors).length > 0) {
@@ -62,8 +68,8 @@ const login = async (req: Request, res: Response) => {
   try {
     const errors: Partial<LoginErrors> = {};
     // 비워져 있으면 에러를 클라이언트로 전송
-    if (isEmpty(username)) errors.username = '사용자 이름을 작성해 주세요.';
-    if (isEmpty(password)) errors.password = '비밀번호를 작성해 주세요.';
+    if (isEmpty(username)) errors.username = "사용자 이름을 작성해 주세요.";
+    if (isEmpty(password)) errors.password = "비밀번호를 작성해 주세요.";
 
     // 에러가 있다면 400 에러와 함께 에러를 전달
     if (Object.keys(errors).length > 0) {
@@ -73,7 +79,10 @@ const login = async (req: Request, res: Response) => {
     // DB에 유저 찾기
     const user = await User.findOneBy({ username });
 
-    if (!user) return res.status(404).json({ username: '사용자 이름이 등록되지 않았습니다.' });
+    if (!user)
+      return res
+        .status(404)
+        .json({ username: "사용자 이름이 등록되지 않았습니다." });
 
     // 유저가 있으면 비밀번호 비교
 
@@ -81,18 +90,18 @@ const login = async (req: Request, res: Response) => {
 
     // 비밀번호가 다르면 에러 보내기
     if (!passowrdMatches) {
-      return res.status(401).json({ passowrd: '비밀번호가 잘못되었습니다.' });
+      return res.status(401).json({ passowrd: "비밀번호가 잘못되었습니다." });
     }
 
     // 비밀번호가 맞으면 토큰 생성
     const token = jwt.sign({ username }, process.env.JWT_SECRET);
 
     res.set(
-      'Set-Cookie',
-      cookie.serialize('token', token, {
+      "Set-Cookie",
+      cookie.serialize("token", token, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7,
-        path: '/',
+        path: "/",
       })
     );
 
@@ -103,9 +112,10 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-const authRouter = Router();
+const authRoutes = Router();
 
-authRouter.post('/register', register);
-authRouter.post('/login', login);
+authRoutes.get("/me", userMiddleware, authMiddleware, me);
+authRoutes.post("/register", register);
+authRoutes.post("/login", login);
 
-export default authRouter;
+export default authRoutes;
