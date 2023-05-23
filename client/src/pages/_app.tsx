@@ -6,17 +6,19 @@ import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 
 export default function App({ Component, pageProps }: AppProps) {
+  axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + '/api';
+  axios.defaults.withCredentials = true;
+
   const { pathname } = useRouter();
   const authRoutes = ['/register', '/login'];
   const authRoute = authRoutes.includes(pathname);
 
-  axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + '/api';
-  axios.defaults.withCredentials = true;
-
   return (
     <AuthContextProvider>
       {!authRoute && <Navbar />}
-      <Component {...pageProps} />
+      <div className={authRoute ? '' : 'pt-16'}>
+        <Component {...pageProps} />
+      </div>
     </AuthContextProvider>
   );
 }
