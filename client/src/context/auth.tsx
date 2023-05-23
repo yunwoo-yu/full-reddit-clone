@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { User } from '../types/types';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 interface State {
   authenticated: boolean;
@@ -48,7 +49,9 @@ const reducer = (state: State, { type, payload }: Action) => {
 };
 
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
+  const { pathname } = useRouter();
   const [state, defaultdispatch] = useReducer(reducer, { ...initialData });
+  const isAuthPage = pathname === ('/login' || '/register');
 
   const dispatch = (type: string, payload?: any) => {
     defaultdispatch({ type, payload });
@@ -66,9 +69,10 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         dispatch('STOP_LOADING');
       }
     };
-
-    loadUser();
-  }, []);
+    if (!isAuthPage) {
+      loadUser();
+    }
+  }, [isAuthPage]);
 
   console.log(state);
 
