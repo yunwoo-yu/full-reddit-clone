@@ -47,8 +47,11 @@ const createSub = async (req: Request, res: Response, next) => {
   }
 };
 
+const topSubs = (req: Request, res: Response) => {};
+
 const subRoutes = Router();
 
 subRoutes.post("/", userMiddleware, authMiddleware, createSub);
+subRoutes.get("/sub/topSubs", topSubs);
 
 export default subRoutes;
