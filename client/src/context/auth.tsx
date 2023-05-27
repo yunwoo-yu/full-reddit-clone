@@ -74,8 +74,6 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [isAuthPage]);
 
-  console.log(state);
-
   return (
     <DispatchContext.Provider value={dispatch}>
       <AuthContext.Provider value={state}>{children}</AuthContext.Provider>
