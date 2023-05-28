@@ -1,3 +1,4 @@
+import SideBar from '@/src/components/SideBar';
 import { useAuthState } from '@/src/context/auth';
 import axios from 'axios';
 import Image from 'next/image';
@@ -100,10 +101,10 @@ const SubPage = () => {
                   {sub.imageUrl && (
                     <Image
                       src={sub.imageUrl}
+                      alt='커뮤니티 이미지'
                       width={70}
                       height={70}
-                      className='rounded-full'
-                      alt='커뮤니티 이미지'
+                      className='h-[70px] rounded-full'
                       onClick={() => openFileInput('image')}
                     />
                   )}
@@ -120,7 +121,10 @@ const SubPage = () => {
             </div>
           </div>
           {/* 포스트와 사이드바 */}
-          <div className='mx-auto flex max-w-5xl px-4 pt-5'></div>
+          <div className='mx-auto flex max-w-5xl px-4 pt-5'>
+            <div className='w-full md:mr-3 md:w-8/12'></div>
+            <SideBar sub={sub} />
+          </div>
         </>
       )}
     </>

@@ -34,7 +34,7 @@ const Home: NextPage = () => {
                 <Link href={`/r/${sub.name}`}>
                   <Image
                     src={sub.imageUrl}
-                    className='cursor-pointer rounded-full'
+                    className='h-[24px] cursor-pointer rounded-full'
                     alt='Sub'
                     width={24}
                     height={24}
