@@ -52,7 +52,6 @@ const SubPage = () => {
       fileInput.name = type;
       fileInputRef.current.click();
     }
-    console.log('zz');
   };
 
   useEffect(() => {
@@ -61,7 +60,7 @@ const SubPage = () => {
     setOwnSub(authenticated && sub.username === user.username);
   }, [sub, authenticated, user]);
 
-  console.log(ownSub);
+  console.log(sub);
 
   return (
     <>
