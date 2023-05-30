@@ -17,6 +17,21 @@ const getSub = async (req: Request, res: Response) => {
   try {
     const sub = await Sub.findOneByOrFail({ name });
 
+    // 포스트를 생성한 후에 해당 sub에 속하는 포스트 정보들을 넣어주기
+    const posts = await Post.find({
+      where: { subName: sub.name },
+      order: { createdAt: "DESC" },
+      relations: ["comments", "votes"],
+    });
+
+    sub.posts = posts;
+
+    if (res.locals.user) {
+      sub.posts.forEach((p) => p.setUserVote(res.locals.user));
+    }
+
+    console.log(sub);
+
     return res.json(sub);
   } catch (error) {
     return res.status(404).json({ error: "커뮤니티를 찾을 수 없습니다." });
@@ -144,10 +159,12 @@ const uploadSubImage = async (req: Request, res: Response) => {
     if (type === "image") {
       // 사용중인 Urn 저장 (이전 파일 삭제를 위해)
       oldImageUrn = sub.imageUrn || "";
+
       // 새로운 파일 이름을 Urn 으로 넣어주기
       sub.imageUrn = req.file?.filename || "";
     } else if (type === "banner") {
       oldImageUrn = sub.bannerUrn || "";
+
       sub.bannerUrn = req.file?.filename || "";
     }
 

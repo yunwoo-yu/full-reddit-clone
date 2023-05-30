@@ -6,6 +6,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import subRoutes from "./routes/subs";
 import cookieParser from "cookie-parser";
+import postRouter from "./routes/post";
 
 const app = express();
 const origin = "http://localhost:3000";
@@ -25,6 +26,7 @@ dotenv.config();
 app.get("/", (_, res) => res.send("running"));
 app.use("/api/auth", authRoutes);
 app.use("/api/subs", subRoutes);
+app.use("/api/post", postRouter);
 
 app.use(express.static("public"));
 
