@@ -26,7 +26,7 @@ dotenv.config();
 app.get("/", (_, res) => res.send("running"));
 app.use("/api/auth", authRoutes);
 app.use("/api/subs", subRoutes);
-app.use("/api/post", postRouter);
+app.use("/api/posts", postRouter);
 
 app.use(express.static("public"));
 
