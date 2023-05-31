@@ -3,18 +3,8 @@ import { useAuthState } from '@/src/context/auth';
 import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
-
-const fetcher = async (url: string) => {
-  try {
-    const res = await axios.get(url);
-
-    return res.data;
-  } catch (error: any) {
-    throw error.response.data;
-  }
-};
 
 const SubPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -22,10 +12,7 @@ const SubPage = () => {
   const { authenticated, user } = useAuthState();
   const router = useRouter();
   const subName = router.query.sub;
-  const { data: sub, error } = useSWR(
-    subName ? `/subs/${subName}` : null,
-    fetcher
-  );
+  const { data: sub, error } = useSWR(subName ? `/subs/${subName}` : null);
 
   const uploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;

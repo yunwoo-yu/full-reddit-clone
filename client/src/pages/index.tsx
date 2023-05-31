@@ -1,18 +1,14 @@
-import { NextPage } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import useSWR from 'swr';
-import { Sub } from '../types/types';
-import axios from 'axios';
-import Image from 'next/image';
 import { useAuthState } from '../context/auth';
+import { Sub } from '../types/types';
 
-const Home: NextPage = () => {
-  const fetcher = async (url: string) => (await axios.get(url)).data;
-
+const Home = () => {
   const { authenticated } = useAuthState();
   const address = 'http://localhost:4000/api/subs/sub/topSubs';
 
-  const { data: topSubs } = useSWR<Sub[]>(address, fetcher);
+  const { data: topSubs } = useSWR<Sub[]>(address);
 
   return (
     <div className='mx-auto flex max-w-5xl px-4 pt-5'>
