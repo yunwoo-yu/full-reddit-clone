@@ -5,6 +5,7 @@ import { SWRConfig } from 'swr';
 import Navbar from '../components/Navbar';
 import AuthContextProvider from '../context/auth';
 import '../styles/globals.css';
+import Head from 'next/head';
 
 export default function App({ Component, pageProps }: AppProps) {
   axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + '/api';
@@ -25,17 +26,27 @@ export default function App({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <SWRConfig
-      value={{
-        fetcher,
-      }}
-    >
-      <AuthContextProvider>
-        {!authRoute && <Navbar />}
-        <div className={authRoute ? '' : 'pt-16'}>
-          <Component {...pageProps} />
-        </div>
-      </AuthContextProvider>
-    </SWRConfig>
+    <>
+      <Head>
+        <script
+          defer
+          src='https://use.fontawesome.com/releases/v6.1.1/js/all.js'
+          integrity='sha384-xBXmu0dk1bEoiwd71wOonQLyH+VpgR1XcDH3rtxrLww5ajNTuMvBdL5SOiFZnNdp'
+          crossOrigin='anonymous'
+        ></script>
+      </Head>
+      <SWRConfig
+        value={{
+          fetcher,
+        }}
+      >
+        <AuthContextProvider>
+          {!authRoute && <Navbar />}
+          <div className={authRoute ? '' : 'pt-16'}>
+            <Component {...pageProps} />
+          </div>
+        </AuthContextProvider>
+      </SWRConfig>
+    </>
   );
 }
