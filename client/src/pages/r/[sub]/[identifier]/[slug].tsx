@@ -3,6 +3,7 @@ import { Comment, Post } from '@/src/types/types';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Link from 'next/link';
+import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 
 import { useRouter } from 'next/router';
 import { FormEvent, useState } from 'react';
@@ -13,14 +14,12 @@ const PostPage = () => {
   const [newComment, setNewComment] = useState('');
   const { authenticated, user } = useAuthState();
   const { identifier, sub, slug } = router.query;
-  const { data: post, error } = useSWR<Post>(
+  const { data: post, mutate: postMutate } = useSWR<Post>(
     identifier && slug ? `/posts/${identifier}/${slug}` : null
   );
-  const { data: comments } = useSWR<Comment[]>(
+  const { data: comments, mutate: commentMutate } = useSWR<Comment[]>(
     identifier && slug ? `/posts/${identifier}/${slug}/comments` : null
   );
-
-  console.log(comments);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -34,11 +33,38 @@ const PostPage = () => {
         body: newComment,
       });
 
+      commentMutate();
       setNewComment('');
     } catch (error) {
       console.log(error);
     }
   };
+
+  const vote = async (value: number, comment?: Comment) => {
+    if (!authenticated) router.push('/login');
+
+    // 클릭한 vote 일 경우 reset
+    if (
+      (!comment && value === post?.userVote) ||
+      (comment && comment.userVote === value)
+    ) {
+      value = 0;
+    }
+
+    try {
+      await axios.post('/votes', {
+        identifier,
+        slug,
+        commentIdentifier: comment?.identifier,
+        value,
+      });
+
+      commentMutate();
+      postMutate();
+    } catch (error) {}
+  };
+
+  console.log(post);
 
   return (
     <div className='mx-auto flex max-w-5xl px-4 pt-5'>
@@ -47,6 +73,32 @@ const PostPage = () => {
           {post && (
             <>
               <div className='flex'>
+                {/* 좋아요 싫어요 부분 */}
+                <div className='w-10 flex-shrink-0 rounded-l py-2 text-center'>
+                  {/* 좋아요 */}
+                  <div
+                    className='mx-auto flex w-6 cursor-pointer justify-center rounded text-gray-400 hover:bg-gray-300 hover:text-red-500'
+                    onClick={() => vote(1)}
+                  >
+                    {post.userVote === 1 ? (
+                      <FaArrowUp className='text-red-500' />
+                    ) : (
+                      <FaArrowUp />
+                    )}
+                  </div>
+                  <p className='text-xs font-bold'>{post.voteScore}</p>
+                  {/* 싫어요 */}
+                  <div
+                    className='mx-auto flex w-6 cursor-pointer justify-center rounded text-gray-400 hover:bg-gray-300 hover:text-blue-500'
+                    onClick={() => vote(-1)}
+                  >
+                    {post.userVote === -1 ? (
+                      <FaArrowDown className='text-blue-500' />
+                    ) : (
+                      <FaArrowDown />
+                    )}
+                  </div>
+                </div>
                 <div className='py-2 pr-2'>
                   <div className='flex items-center'>
                     <p className='text-xs text-gray-400'>
@@ -122,6 +174,32 @@ const PostPage = () => {
               {/* 댓글 리스트 부분 */}
               {comments?.map((comment) => (
                 <div className='flex' key={comment.identifier}>
+                  {/* 좋아요 싫어요 부분 */}
+                  <div className='w-10 flex-shrink-0 rounded-l py-2 text-center'>
+                    {/* 좋아요 */}
+                    <div
+                      className='mx-auto flex w-6 cursor-pointer justify-center rounded text-gray-400 hover:bg-gray-300 hover:text-red-500'
+                      onClick={() => vote(1, comment)}
+                    >
+                      {comment.userVote === 1 ? (
+                        <FaArrowUp className='text-red-500' />
+                      ) : (
+                        <FaArrowUp />
+                      )}
+                    </div>
+                    <p className='text-xs font-bold'>{comment.voteScore}</p>
+                    {/* 싫어요 */}
+                    <div
+                      className='mx-auto flex w-6 cursor-pointer justify-center rounded text-gray-400 hover:bg-gray-300 hover:text-blue-500'
+                      onClick={() => vote(-1, comment)}
+                    >
+                      {comment.userVote === -1 ? (
+                        <FaArrowDown className='text-blue-500' />
+                      ) : (
+                        <FaArrowDown />
+                      )}
+                    </div>
+                  </div>
                   <div className='py-2 pr-2'>
                     <p className='mb-1 text-xs leading-none'>
                       <Link
@@ -137,6 +215,7 @@ const PostPage = () => {
                         `}
                       </span>
                     </p>
+                    <p>{comment.body}</p>
                   </div>
                 </div>
               ))}
