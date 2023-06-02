@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import subRoutes from "./routes/subs";
 import cookieParser from "cookie-parser";
 import postRouter from "./routes/post";
+import voteRoutes from "./routes/vote";
 
 const app = express();
 const origin = "http://localhost:3000";
@@ -27,6 +28,7 @@ app.get("/", (_, res) => res.send("running"));
 app.use("/api/auth", authRoutes);
 app.use("/api/subs", subRoutes);
 app.use("/api/posts", postRouter);
+app.use("/api/votes", voteRoutes);
 
 app.use(express.static("public"));
 
