@@ -30,8 +30,6 @@ const getSub = async (req: Request, res: Response) => {
       sub.posts.forEach((p) => p.setUserVote(res.locals.user));
     }
 
-    console.log(sub);
-
     return res.json(sub);
   } catch (error) {
     return res.status(404).json({ error: "커뮤니티를 찾을 수 없습니다." });
