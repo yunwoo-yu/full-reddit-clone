@@ -16,7 +16,7 @@ const PostCreate = () => {
     if (title.trim() === '' || !subName) return;
 
     try {
-      const { data: post } = await axios.post<Post>('/post', {
+      const { data: post } = await axios.post<Post>('/posts', {
         title: title.trim(),
         body,
         sub: subName,
