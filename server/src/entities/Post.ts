@@ -11,9 +11,10 @@ import BaseEntity from "./Entity";
 import { User } from "./User";
 import Sub from "./Subs";
 import { Exclude, Expose } from "class-transformer";
-import { makeid, slugify } from "../util/helpers";
+import { makeid } from "../util/helpers";
 import Vote from "./Vote";
 import Comment from "./Comment";
+import { slugify } from "transliteration";
 
 @Entity("posts")
 export default class Post extends BaseEntity {
@@ -72,6 +73,7 @@ export default class Post extends BaseEntity {
 
   setUserVote(user: User) {
     const index = this.votes?.findIndex((v) => v.username === user.username);
+
     this.userVote = index > -1 ? this.votes[index].value : 0;
   }
 
