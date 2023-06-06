@@ -9,10 +9,11 @@ import axios from 'axios';
 
 interface Props {
   post: Post;
-  subMutate: () => void;
+  subMutate?: () => void;
+  mutate?: () => void;
 }
 
-const PostCard = ({ post, subMutate }: Props) => {
+const PostCard = ({ post, subMutate, mutate }: Props) => {
   const {
     identifier,
     slug,
@@ -31,8 +32,6 @@ const PostCard = ({ post, subMutate }: Props) => {
   const router = useRouter();
   const isInSubPage = router.pathname === '/r/[sub]';
 
-  console.log(router.pathname);
-
   const vote = async (value: number) => {
     if (!authenticated) router.push('/login');
 
@@ -44,7 +43,8 @@ const PostCard = ({ post, subMutate }: Props) => {
         slug,
         value,
       });
-      subMutate();
+      if (mutate) mutate();
+      if (subMutate) subMutate();
     } catch (error) {
       console.log(error);
     }
@@ -87,6 +87,8 @@ const PostCard = ({ post, subMutate }: Props) => {
                 src={sub!.imageUrl}
                 alt='sub'
                 className='cursor-pointer rounded-full'
+                width={18}
+                height={18}
               />
             </Link>
             <Link
