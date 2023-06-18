@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useAuthDispatch, useAuthState } from '../context/auth';
 import Link from 'next/link';
+import Image from 'next/image';
+import { FaSearch } from 'react-icons/fa';
 
 const Navbar = () => {
   const { loading, authenticated } = useAuthState();
@@ -19,12 +21,20 @@ const Navbar = () => {
   };
 
   return (
-    <div className='fixed inset-x-0 top-0 z-10 flex h-16 items-center justify-between bg-white px-5'>
+    <div className='h-13 fixed inset-x-0 top-0 z-10 flex items-center justify-between bg-white px-5'>
       <span className='text-2xl font-semibold text-gray-400'>
-        <Link href='/'>Community</Link>
+        <Link href='/'>
+          <Image
+            src='/reddit-name-logo.png'
+            alt='logo'
+            width={80}
+            height={45}
+          />
+        </Link>
       </span>
       <div className='max-w-full px-4'>
         <div className='relative flex items-center rounded border bg-gray-100 hover:border-gray-700 hover:bg-white'>
+          <FaSearch className='ml-2 text-gray-400' />
           <input
             type='text'
             placeholder='Search Reddit'

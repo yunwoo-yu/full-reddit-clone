@@ -69,7 +69,7 @@ const PostPage = () => {
   return (
     <div className='mx-auto flex max-w-5xl px-4 pt-5'>
       <div className='w-full md:mr-3 md:w-8/12'>
-        <div className='rounded bg-white'>
+        <div className='rounded bg-white py-2'>
           {post && (
             <>
               <div className='flex'>
@@ -127,7 +127,7 @@ const PostPage = () => {
                 </div>
               </div>
               {/* 댓글 작성 구간 */}
-              <div className='mb-4  pr-6'>
+              <div className='mb-4 pl-9 pr-6'>
                 {authenticated ? (
                   <div>
                     <p className='mb-1 text-xs'>

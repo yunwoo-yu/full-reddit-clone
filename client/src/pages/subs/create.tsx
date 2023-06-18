@@ -29,8 +29,8 @@ function SubCreate() {
   };
 
   return (
-    <div className='flex flex-col justify-center pt-16'>
-      <div className='mx-auto w-10/12 md:w-96'>
+    <div className='flex flex-col justify-center pt-16 '>
+      <div className='mx-auto w-10/12 rounded bg-white p-4 md:w-96'>
         <h1 className=' mb-2 text-lg font-medium'>커뮤니티 만들기</h1>
         <hr />
         <form onSubmit={handleSubmit}>

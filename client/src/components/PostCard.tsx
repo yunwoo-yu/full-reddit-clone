@@ -80,36 +80,37 @@ const PostCard = ({ post, subMutate, mutate }: Props) => {
       </div>
       {/* 포스트 데이터 */}
       <div className='w-full p-2 '>
-        {!isInSubPage && (
-          <div className='flex items-center'>
-            <Link href={`/r/${subName}`}>
-              <Image
-                src={sub!.imageUrl}
-                alt='sub'
-                className='cursor-pointer rounded-full'
-                width={18}
-                height={18}
-              />
+        <div className='flex items-center'>
+          {!isInSubPage && (
+            <div className='flex items-center'>
+              <Link href={`/r/${subName}`}>
+                <Image
+                  src={sub!.imageUrl}
+                  alt='sub'
+                  className='cursor-pointer rounded-full'
+                  width={18}
+                  height={18}
+                />
+              </Link>
+              <Link
+                href={`/r/${subName}`}
+                className='ml-2 cursor-pointer text-xs font-bold hover:underline'
+              >
+                /r/{subName}
+              </Link>
+              <span className='mx-1 text-xs text-gray-400'>•</span>
+            </div>
+          )}
+          <p className='text-xs text-gray-400'>
+            Posted by
+            <Link href={`/u/${username}`} className='mx-1 hover:underline'>
+              /u/{username}
             </Link>
-            <Link
-              href={`/r/${subName}`}
-              className='ml-2 cursor-pointer text-xs font-bold hover:underline'
-            >
-              /r/{subName}
+            <Link href={url} className='mx-1 hover:underline'>
+              {dayjs(createdAt).format('YYYY-MM-DD HH:mm')}
             </Link>
-            <span className='mx-1 text-xs text-gray-400'>•</span>
-          </div>
-        )}
-        <p className='text-xs text-gray-400'>
-          Posted by
-          <Link href={`/r/${username}`} className='mx-1 hover:underline'>
-            /u/{username}
-          </Link>
-          <Link href={url} className='mx-1 hover:underline'>
-            {dayjs(createdAt).format('YYYY-MM-DD HH:mm')}
-          </Link>
-        </p>
-
+          </p>
+        </div>
         <Link href={url} className='my-1 text-lg font-medium'>
           {title}
         </Link>
