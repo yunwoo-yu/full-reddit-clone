@@ -12,21 +12,21 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
 
-  # 서비스 명
-  pgadmin:
-    # 사용할 이미지
-    image: dpage/pgadmin4
-    # 컨테이너 실행 시 재시작
-    restart: always
-    # 컨테이너명 설정
-    container_name: pgadmin4
-    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
-    ports:
-      - "5050:80"
-    # 환경 변수 설정
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_DEFAULT_EMAIL}"
-      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
-    # 볼륨 설정
-    volumes:
-      - ./data/pgadmin/:/var/lib/pgadmin
+  # # 서비스 명
+  # pgadmin:
+  #   # 사용할 이미지
+  #   image: dpage/pgadmin4
+  #   # 컨테이너 실행 시 재시작
+  #   restart: always
+  #   # 컨테이너명 설정
+  #   container_name: pgadmin4
+  #   # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+  #   ports:
+  #     - "5050:80"
+  #   # 환경 변수 설정
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "${PGADMIN_DEFAULT_EMAIL}"
+  #     PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
+  #   # 볼륨 설정
+  #   volumes:
+  #     - ./data/pgadmin/:/var/lib/pgadmin
