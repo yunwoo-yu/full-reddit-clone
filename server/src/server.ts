@@ -8,6 +8,7 @@ import subRoutes from "./routes/subs";
 import cookieParser from "cookie-parser";
 import postRouter from "./routes/post";
 import voteRoutes from "./routes/vote";
+import usersRouter from "./routes/users";
 
 const app = express();
 const origin = "http://localhost:3000";
@@ -29,6 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/subs", subRoutes);
 app.use("/api/posts", postRouter);
 app.use("/api/votes", voteRoutes);
+app.use("/api/users", usersRouter);
 
 app.use(express.static("public"));
 
