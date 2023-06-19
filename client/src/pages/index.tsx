@@ -7,7 +7,7 @@ import { Post, Sub } from '../types/types';
 import PostCard from '../components/PostCard';
 import { useEffect, useState } from 'react';
 
-const address = 'http://localhost:4000/api/subs/sub/topSubs';
+const address = '/subs/sub/topSubs';
 
 const getKey = (pageIndex: number, previousPageData: Post[]) => {
   if (previousPageData && !previousPageData.length) return null;
